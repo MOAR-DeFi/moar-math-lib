@@ -1,4 +1,4 @@
-export type CalculateLiquidityArgs = {
+export interface CalculateLiquidityArgs {
   assets: {
     cTokenBalance?: string;
     storedBorrowBalance?: string;
