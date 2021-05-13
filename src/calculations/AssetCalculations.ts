@@ -1,5 +1,5 @@
 import { evaluate, compare } from 'mathjs';
-import { DepositArgs, BorrowArgs, DepositValueArgs, BorrowValueArgs, UtilizationArgs, SupplyRatePerBlockArgs, BorrowRatePerBlockArgs, BorrowApyArgs, SupplyApyArgs, NetApyArgs, MarketSizeArgs, MarketSizeValueArgs, AllMarketsSizeValue, MarketTotalBorrowedArgs, MarketTotalBorrowedValueArgs } from '../interfaces/AssetInterfaces';
+import { DepositArgs, BorrowArgs, DepositValueArgs, BorrowValueArgs, UtilizationArgs, SupplyRatePerBlockArgs, BorrowRatePerBlockArgs, BorrowApyArgs, SupplyApyArgs, NetApyArgs, MarketSizeArgs, MarketSizeValueArgs, MarketTotalBorrowedArgs, MarketTotalBorrowedValueArgs } from '../interfaces/AssetInterfaces';
 
 export function depositAmount(depositArgs: DepositArgs): string {
     return evaluate(`${depositArgs.cTokenBalance} * ${depositArgs.marketExchangeRate}`);
