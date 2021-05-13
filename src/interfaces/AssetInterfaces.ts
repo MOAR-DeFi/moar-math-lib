@@ -57,3 +57,20 @@ export interface NetApyArgs {
         value: string | BorrowValueArgs;
     }[]
 }
+
+export interface MarketSizeArgs {
+    totalSupply: string;
+    exchangeRate: string;
+}
+
+export interface MarketSizeValueArgs extends MarketSizeArgs {
+    price: string;
+}
+
+export interface MarketTotalBorrowedArgs {
+    totalBorrows: string;
+}
+
+export interface MarketTotalBorrowedValueArgs extends MarketTotalBorrowedArgs {
+    price: string;
+}

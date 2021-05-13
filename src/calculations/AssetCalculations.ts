@@ -1,5 +1,5 @@
 import { evaluate, compare } from 'mathjs';
-import { DepositArgs, BorrowArgs, DepositValueArgs, BorrowValueArgs, UtilizationArgs, SupplyRatePerBlockArgs, BorrowRatePerBlockArgs, BorrowApyArgs, SupplyApyArgs, NetApyArgs } from '../interfaces/AssetInterfaces';
+import { DepositArgs, BorrowArgs, DepositValueArgs, BorrowValueArgs, UtilizationArgs, SupplyRatePerBlockArgs, BorrowRatePerBlockArgs, BorrowApyArgs, SupplyApyArgs, NetApyArgs, MarketSizeArgs, MarketSizeValueArgs, AllMarketsSizeValue, MarketTotalBorrowedArgs, MarketTotalBorrowedValueArgs } from '../interfaces/AssetInterfaces';
 
 export function depositAmount(depositArgs: DepositArgs): string {
     return evaluate(`${depositArgs.cTokenBalance} * ${depositArgs.marketExchangeRate}`);
@@ -97,6 +97,35 @@ export function netApy(netApyArgs: NetApyArgs): string{
     return evaluate(`(${deposits} - ${borrows}) / ${totalDepositsValue}`)
 }
 
-// export function marketSize(marketSizeArgs: MarketSizeArgs): string{
+export function marketSize(marketSizeArgs: MarketSizeArgs): string{
+    return evaluate(`${marketSizeArgs.exchangeRate} * ${marketSizeArgs.totalSupply}`)
+}
 
-// }
+export function marketSizeValue(marketSizeArgs: MarketSizeValueArgs): string{
+    return evaluate(`${marketSize(marketSizeArgs)} * ${marketSizeArgs.price}`)
+}
+
+export function allMarketsSizeValue(marketSizeArgs: MarketSizeValueArgs[]): string{
+    let result = '0';
+    for(let i=0; i< marketSizeArgs.length; i++) {
+        result = evaluate(`${marketSizeValue(marketSizeArgs[i])} + ${result}`);
+    }
+    return result
+}
+
+export function marketTotalBorrowed(marketTotalBorrowedArgs: MarketTotalBorrowedArgs): string{
+    return marketTotalBorrowedArgs.totalBorrows
+}
+
+export function marketTotalBorrowedValue(marketTotalBorrowedArgs: MarketTotalBorrowedValueArgs): string{
+    return evaluate(`${marketTotalBorrowed(marketTotalBorrowedArgs)} * ${marketTotalBorrowedArgs.price}`)
+}
+
+export function allMarketsBorrowedValue(marketTotalBorrowedArgs: MarketTotalBorrowedValueArgs[]): string{
+    let result = '0';
+    for(let i=0; i< marketTotalBorrowedArgs.length; i++) {
+        result = evaluate(`${marketTotalBorrowedValue(marketTotalBorrowedArgs[i])} + ${result}`);
+    }
+    return result
+}
+
