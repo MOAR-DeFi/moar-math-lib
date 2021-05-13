@@ -113,7 +113,7 @@ describe('calculate assets', () => {
                 }
             }
         });
-        expect(result).toEqual(0.03173706756738337);
+        expect(result).toEqual(0.03173706756736361);
     });
 
     it('calculates basic supplyApy', () => {
@@ -133,7 +133,7 @@ describe('calculate assets', () => {
                 }
             }
         });
-        expect(result).toEqual(0.0023834236258646335);
+        expect(result).toEqual(0.002383423625867964);
     });
 
     it('calculates basic netApy', () => {
