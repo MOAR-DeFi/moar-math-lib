@@ -8,6 +8,7 @@ export const calculateLiquidityBasicAccount: LiquidityArgs = {
             exchangeRate: '0.5',
             underlyingPrice: '1500',
             collateralFactor: '0.5',
+            enteredMarket: true,
             cProtections: [],
         },
         {
@@ -16,6 +17,30 @@ export const calculateLiquidityBasicAccount: LiquidityArgs = {
             exchangeRate: '1',
             underlyingPrice: '1',
             collateralFactor: '1',
+            enteredMarket: true,
+            cProtections: [],
+        },
+    ],
+};
+
+export const calculateLiquidityBasicAccountNotEnteredMarkets: LiquidityArgs = {
+    assets: [
+        {
+            cTokenBalance: '8',
+            storedBorrowBalance: '0',
+            exchangeRate: '0.5',
+            underlyingPrice: '1500',
+            collateralFactor: '0.5',
+            enteredMarket: false,
+            cProtections: [],
+        },
+        {
+            cTokenBalance: '178',
+            storedBorrowBalance: '0',
+            exchangeRate: '1',
+            underlyingPrice: '1',
+            collateralFactor: '1',
+            enteredMarket: false,
             cProtections: [],
         },
     ],
@@ -29,6 +54,7 @@ export const calculateLiquidityBasicAccountWithCOPs: LiquidityArgs = {
             exchangeRate: '0.5',
             underlyingPrice: '1500',
             collateralFactor: '0.5',
+            enteredMarket: true,
             cProtections: [
                 {
                     amount: '100',
@@ -45,6 +71,7 @@ export const calculateLiquidityBasicAccountWithCOPs: LiquidityArgs = {
             exchangeRate: '1',
             underlyingPrice: '1',
             collateralFactor: '1',
+            enteredMarket: true,
             cProtections: [],
         },
     ],
@@ -58,6 +85,7 @@ export const calculateLiquidityBasicAccountWithOutdatedCOP: LiquidityArgs = {
             exchangeRate: '0.5',
             underlyingPrice: '1500',
             collateralFactor: '0.5',
+            enteredMarket: true,
             cProtections: [
                 {
                     amount: '100',
@@ -74,6 +102,7 @@ export const calculateLiquidityBasicAccountWithOutdatedCOP: LiquidityArgs = {
             exchangeRate: '1',
             underlyingPrice: '1',
             collateralFactor: '1',
+            enteredMarket: true,
             cProtections: [],
         },
     ],
@@ -87,6 +116,7 @@ export const calculateLiquidityBasicAccountWithCOPsWithBorrow: LiquidityArgs = {
             exchangeRate: '0.5',
             underlyingPrice: '1500',
             collateralFactor: '0.5',
+            enteredMarket: true,
             cProtections: [
                 {
                     amount: '100',
@@ -103,6 +133,7 @@ export const calculateLiquidityBasicAccountWithCOPsWithBorrow: LiquidityArgs = {
             exchangeRate: '1',
             underlyingPrice: '1',
             collateralFactor: '1',
+            enteredMarket: true,
             cProtections: [],
         },
     ],
@@ -116,6 +147,7 @@ export const calculateLiquidityBasicAccountWithCOPNotLocked: LiquidityArgs = {
             exchangeRate: '0.5',
             underlyingPrice: '1500',
             collateralFactor: '0.5',
+            enteredMarket: true,
             cProtections: [
                 {
                     amount: '100',
@@ -132,6 +164,7 @@ export const calculateLiquidityBasicAccountWithCOPNotLocked: LiquidityArgs = {
             exchangeRate: '1',
             underlyingPrice: '1',
             collateralFactor: '1',
+            enteredMarket: true,
             cProtections: [],
         },
     ],
@@ -145,6 +178,7 @@ export const calculateLiquidityBasicAccountWithCOPMTM: LiquidityArgs = {
             exchangeRate: '0.5',
             underlyingPrice: '2000',
             collateralFactor: '0.5',
+            enteredMarket: true,
             cProtections: [
                 {
                     amount: '100',
@@ -161,6 +195,7 @@ export const calculateLiquidityBasicAccountWithCOPMTM: LiquidityArgs = {
             exchangeRate: '1',
             underlyingPrice: '1',
             collateralFactor: '1',
+            enteredMarket: true,
             cProtections: [],
         },
     ],
@@ -174,6 +209,7 @@ export const calculateLiquidityBasicAccountMultipleCOPsMultipleBorrows: Liquidit
             exchangeRate: '0.5',
             underlyingPrice: '1500',
             collateralFactor: '0.5',
+            enteredMarket: true,
             cProtections: [
                 {
                     amount: '100',
@@ -190,6 +226,7 @@ export const calculateLiquidityBasicAccountMultipleCOPsMultipleBorrows: Liquidit
             exchangeRate: '1',
             underlyingPrice: '1',
             collateralFactor: '1',
+            enteredMarket: true,
             cProtections: [],
         },
         {
@@ -198,6 +235,7 @@ export const calculateLiquidityBasicAccountMultipleCOPsMultipleBorrows: Liquidit
             exchangeRate: '0.25',
             underlyingPrice: '25',
             collateralFactor: '0.6',
+            enteredMarket: true,
             cProtections: [
                 {
                     amount: '60',
@@ -214,6 +252,7 @@ export const calculateLiquidityBasicAccountMultipleCOPsMultipleBorrows: Liquidit
             exchangeRate: '1',
             underlyingPrice: '0.09',
             collateralFactor: '0.75',
+            enteredMarket: true,
             cProtections: [],
         },
     ],

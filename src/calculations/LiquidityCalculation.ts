@@ -13,34 +13,36 @@ import { depositValue } from './AssetCalculations';
     let sumBorrowsPlusEffects = '0';
 
     liquidityArgs.assets.forEach((asset) => {
-        sumCollateral = evaluate(`${sumCollateral} + ${asset.collateralFactor} * ${depositValue({
-            price: asset.underlyingPrice,
-            cTokenBalance: asset.cTokenBalance,
-            marketExchangeRate: asset.exchangeRate
-        })}`);
+        if (asset.enteredMarket) {
+            sumCollateral = evaluate(`${sumCollateral} + ${asset.collateralFactor} * ${depositValue({
+                price: asset.underlyingPrice,
+                cTokenBalance: asset.cTokenBalance,
+                marketExchangeRate: asset.exchangeRate
+            })}`);
 
-        //todo: create separate file for C-OP related math
-        asset.cProtections.forEach((cProtection) => {
-            if (
-                isProtectionAlive(cProtection.expirationTimestamp, cProtection.maturityWindow) &&
-                compare(cProtection.lockedValue, 0) === 1
-            ) {
-                sumCollateral = evaluate(`${sumCollateral} - (${cProtection.lockedValue} * ${asset.collateralFactor})`);
-                sumCollateral = evaluate(`${sumCollateral} + ${cProtection.lockedValue}`);
+            //todo: create separate file for C-OP related math
+            asset.cProtections.forEach((cProtection) => {
+                if (
+                    isProtectionAlive(cProtection.expirationTimestamp, cProtection.maturityWindow) &&
+                    compare(cProtection.lockedValue, 0) === 1
+                ) {
+                    sumCollateral = evaluate(`${sumCollateral} - (${cProtection.lockedValue} * ${asset.collateralFactor})`);
+                    sumCollateral = evaluate(`${sumCollateral} + ${cProtection.lockedValue}`);
 
-                let markToMarket = '0';
-                if (compare(asset.underlyingPrice, cProtection.strike) === 1) {
-                    const lockedAmount = evaluate(`${cProtection.lockedValue} / ${cProtection.strike}`);
-                    markToMarket = evaluate(
-                        `(${asset.underlyingPrice} - ${cProtection.strike}) * ${lockedAmount} * ${asset.collateralFactor}`
-                    );
+                    let markToMarket = '0';
+                    if (compare(asset.underlyingPrice, cProtection.strike) === 1) {
+                        const lockedAmount = evaluate(`${cProtection.lockedValue} / ${cProtection.strike}`);
+                        markToMarket = evaluate(
+                            `(${asset.underlyingPrice} - ${cProtection.strike}) * ${lockedAmount} * ${asset.collateralFactor}`
+                        );
+                    }
+                    sumCollateral = evaluate(`${sumCollateral} + ${markToMarket}`);
                 }
-                sumCollateral = evaluate(`${sumCollateral} + ${markToMarket}`);
-            }
-        });
-        sumBorrowsPlusEffects = evaluate(
-            `${sumBorrowsPlusEffects} + (${asset.underlyingPrice} * ${asset.storedBorrowBalance})`
-        );
+            });
+            sumBorrowsPlusEffects = evaluate(
+                `${sumBorrowsPlusEffects} + (${asset.underlyingPrice} * ${asset.storedBorrowBalance})`
+            );
+        }
     });
     return evaluate(`${sumCollateral} - ${sumBorrowsPlusEffects}`);
 }

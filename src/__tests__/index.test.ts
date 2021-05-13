@@ -2,6 +2,7 @@ import { liquidity, utilization, borrowRatePerBlock, supplyApy, supplyRatePerBlo
 import {
     calculateLiquidityBasicAccount,
     calculateLiquidityBasicAccountMultipleCOPsMultipleBorrows,
+    calculateLiquidityBasicAccountNotEnteredMarkets,
     calculateLiquidityBasicAccountWithCOPMTM,
     calculateLiquidityBasicAccountWithCOPNotLocked,
     calculateLiquidityBasicAccountWithCOPs,
@@ -13,6 +14,11 @@ describe('calculate liquidity', () => {
     it('calculates basic liquidy', () => {
         const result = liquidity(calculateLiquidityBasicAccount);
         expect(result).toEqual(3178);
+    });
+
+    it('calculates basic liquidy with no markets entered', () => {
+        const result = liquidity(calculateLiquidityBasicAccountNotEnteredMarkets);
+        expect(result).toEqual(0);
     });
 
     it('calculates liquidity with added cops', () => {

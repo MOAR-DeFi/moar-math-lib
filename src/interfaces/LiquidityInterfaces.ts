@@ -5,6 +5,7 @@ export interface LiquidityArgs {
         exchangeRate: string;
         underlyingPrice: string;
         collateralFactor: string;
+        enteredMarket: boolean;
         cProtections: {
             strike: string;
             amount: string;
