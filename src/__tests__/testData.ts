@@ -9,6 +9,8 @@ export const calculateLiquidityBasicAccount: LiquidityArgs = {
             underlyingPrice: '1500',
             collateralFactor: '0.5',
             enteredMarket: true,
+            marketBorrowIndex: '1',
+            accountBorrowIndex: '1',
             cProtections: [],
         },
         {
@@ -18,6 +20,8 @@ export const calculateLiquidityBasicAccount: LiquidityArgs = {
             underlyingPrice: '1',
             collateralFactor: '1',
             enteredMarket: true,
+            marketBorrowIndex: '1',
+            accountBorrowIndex: '1',
             cProtections: [],
         },
     ],
@@ -32,6 +36,8 @@ export const calculateLiquidityBasicAccountNotEnteredMarkets: LiquidityArgs = {
             underlyingPrice: '1500',
             collateralFactor: '0.5',
             enteredMarket: false,
+            marketBorrowIndex: '1',
+            accountBorrowIndex: '1',
             cProtections: [],
         },
         {
@@ -41,6 +47,8 @@ export const calculateLiquidityBasicAccountNotEnteredMarkets: LiquidityArgs = {
             underlyingPrice: '1',
             collateralFactor: '1',
             enteredMarket: false,
+            marketBorrowIndex: '1',
+            accountBorrowIndex: '1',
             cProtections: [],
         },
     ],
@@ -55,10 +63,12 @@ export const calculateLiquidityBasicAccountWithCOPs: LiquidityArgs = {
             underlyingPrice: '1500',
             collateralFactor: '0.5',
             enteredMarket: true,
+            marketBorrowIndex: '1',
+            accountBorrowIndex: '1',
             cProtections: [
                 {
                     amount: '100',
-                    expirationTimestamp: '1620927416',
+                    expirationTimestamp: '2620927416',
                     maturityWindow: '10800',
                     lockedValue: '1500',
                     strike: '1800',
@@ -72,6 +82,8 @@ export const calculateLiquidityBasicAccountWithCOPs: LiquidityArgs = {
             underlyingPrice: '1',
             collateralFactor: '1',
             enteredMarket: true,
+            marketBorrowIndex: '1',
+            accountBorrowIndex: '1',
             cProtections: [],
         },
     ],
@@ -86,6 +98,8 @@ export const calculateLiquidityBasicAccountWithOutdatedCOP: LiquidityArgs = {
             underlyingPrice: '1500',
             collateralFactor: '0.5',
             enteredMarket: true,
+            marketBorrowIndex: '1',
+            accountBorrowIndex: '1',
             cProtections: [
                 {
                     amount: '100',
@@ -103,6 +117,8 @@ export const calculateLiquidityBasicAccountWithOutdatedCOP: LiquidityArgs = {
             underlyingPrice: '1',
             collateralFactor: '1',
             enteredMarket: true,
+            marketBorrowIndex: '1',
+            accountBorrowIndex: '1',
             cProtections: [],
         },
     ],
@@ -117,10 +133,12 @@ export const calculateLiquidityBasicAccountWithCOPsWithBorrow: LiquidityArgs = {
             underlyingPrice: '1500',
             collateralFactor: '0.5',
             enteredMarket: true,
+            marketBorrowIndex: '1',
+            accountBorrowIndex: '1',
             cProtections: [
                 {
                     amount: '100',
-                    expirationTimestamp: '1620927416',
+                    expirationTimestamp: '2620927416',
                     maturityWindow: '10800',
                     lockedValue: '1500',
                     strike: '1800',
@@ -134,6 +152,8 @@ export const calculateLiquidityBasicAccountWithCOPsWithBorrow: LiquidityArgs = {
             underlyingPrice: '1',
             collateralFactor: '1',
             enteredMarket: true,
+            marketBorrowIndex: '1',
+            accountBorrowIndex: '1',
             cProtections: [],
         },
     ],
@@ -148,6 +168,8 @@ export const calculateLiquidityBasicAccountWithCOPNotLocked: LiquidityArgs = {
             underlyingPrice: '1500',
             collateralFactor: '0.5',
             enteredMarket: true,
+            marketBorrowIndex: '1',
+            accountBorrowIndex: '1',
             cProtections: [
                 {
                     amount: '100',
@@ -165,6 +187,8 @@ export const calculateLiquidityBasicAccountWithCOPNotLocked: LiquidityArgs = {
             underlyingPrice: '1',
             collateralFactor: '1',
             enteredMarket: true,
+            marketBorrowIndex: '1',
+            accountBorrowIndex: '1',
             cProtections: [],
         },
     ],
@@ -179,6 +203,8 @@ export const calculateLiquidityBasicAccountWithCOPMTM: LiquidityArgs = {
             underlyingPrice: '2000',
             collateralFactor: '0.5',
             enteredMarket: true,
+            marketBorrowIndex: '1',
+            accountBorrowIndex: '1',
             cProtections: [
                 {
                     amount: '100',
@@ -196,6 +222,8 @@ export const calculateLiquidityBasicAccountWithCOPMTM: LiquidityArgs = {
             underlyingPrice: '1',
             collateralFactor: '1',
             enteredMarket: true,
+            marketBorrowIndex: '1',
+            accountBorrowIndex: '1',
             cProtections: [],
         },
     ],
@@ -210,6 +238,8 @@ export const calculateLiquidityBasicAccountMultipleCOPsMultipleBorrows: Liquidit
             underlyingPrice: '1500',
             collateralFactor: '0.5',
             enteredMarket: true,
+            marketBorrowIndex: '1',
+            accountBorrowIndex: '1',
             cProtections: [
                 {
                     amount: '100',
@@ -227,6 +257,8 @@ export const calculateLiquidityBasicAccountMultipleCOPsMultipleBorrows: Liquidit
             underlyingPrice: '1',
             collateralFactor: '1',
             enteredMarket: true,
+            marketBorrowIndex: '1',
+            accountBorrowIndex: '1',
             cProtections: [],
         },
         {
@@ -236,6 +268,8 @@ export const calculateLiquidityBasicAccountMultipleCOPsMultipleBorrows: Liquidit
             underlyingPrice: '25',
             collateralFactor: '0.6',
             enteredMarket: true,
+            marketBorrowIndex: '1',
+            accountBorrowIndex: '1',
             cProtections: [
                 {
                     amount: '60',
@@ -253,6 +287,8 @@ export const calculateLiquidityBasicAccountMultipleCOPsMultipleBorrows: Liquidit
             underlyingPrice: '0.09',
             collateralFactor: '0.75',
             enteredMarket: true,
+            marketBorrowIndex: '1',
+            accountBorrowIndex: '1',
             cProtections: [],
         },
     ],

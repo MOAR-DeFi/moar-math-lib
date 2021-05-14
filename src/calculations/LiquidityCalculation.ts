@@ -1,6 +1,6 @@
 import { evaluate, compare } from 'mathjs';
 import { LiquidityArgs } from '../interfaces/LiquidityInterfaces';
-import { depositValue } from './AssetCalculations';
+import { depositValue, borrowValue } from './AssetCalculations';
 
 /**
  * Calculates the Account liquidity
@@ -19,13 +19,13 @@ import { depositValue } from './AssetCalculations';
                 cTokenBalance: asset.cTokenBalance,
                 marketExchangeRate: asset.exchangeRate
             })}`);
-
             //todo: create separate file for C-OP related math
             asset.cProtections.forEach((cProtection) => {
                 if (
                     isProtectionAlive(cProtection.expirationTimestamp, cProtection.maturityWindow) &&
                     compare(cProtection.lockedValue, 0) === 1
                 ) {
+
                     sumCollateral = evaluate(`${sumCollateral} - (${cProtection.lockedValue} * ${asset.collateralFactor})`);
                     sumCollateral = evaluate(`${sumCollateral} + ${cProtection.lockedValue}`);
 
@@ -40,7 +40,12 @@ import { depositValue } from './AssetCalculations';
                 }
             });
             sumBorrowsPlusEffects = evaluate(
-                `${sumBorrowsPlusEffects} + (${asset.underlyingPrice} * ${asset.storedBorrowBalance})`
+                `${sumBorrowsPlusEffects} + (${borrowValue({
+                    price: asset.underlyingPrice,
+                    storedBorrowBalance: asset.storedBorrowBalance,
+                    marketBorrowIndex: asset.marketBorrowIndex,
+                    accountBorrowIndex: asset.accountBorrowIndex
+                })})`
             );
         }
     });

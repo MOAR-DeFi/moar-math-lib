@@ -157,5 +157,5 @@ describe('calculate assets', () => {
         const result = capacityUsed(calculateLiquidityBasicAccountMultipleCOPsMultipleBorrows);
         expect(result).toEqual(0.010688110749185667);
     });
-    
+
 });
