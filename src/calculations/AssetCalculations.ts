@@ -14,7 +14,10 @@ export function borrowAmount(borrowArgs: BorrowArgs): string {
 }
 
 export function borrowValue(borrowArgs: BorrowValueArgs): string {
-    return evaluate(`${borrowAmount(borrowArgs)} * ${borrowArgs.price}`);
+    if (compare(borrowArgs.storedBorrowBalance, 0) === 1 && compare(borrowArgs.accountBorrowIndex, 0) === 1) {
+        return evaluate(`${borrowAmount(borrowArgs)} * ${borrowArgs.price}`);
+    }
+    return '0';
 }
 
 export function totalDepositsValue(totalDepositsArgs: DepositValueArgs[]): string {

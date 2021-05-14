@@ -10,7 +10,7 @@ export const calculateLiquidityBasicAccount: LiquidityArgs = {
             collateralFactor: '0.5',
             enteredMarket: true,
             marketBorrowIndex: '1',
-            accountBorrowIndex: '1',
+            accountBorrowIndex: '0',
             cProtections: [],
         },
         {
@@ -21,7 +21,7 @@ export const calculateLiquidityBasicAccount: LiquidityArgs = {
             collateralFactor: '1',
             enteredMarket: true,
             marketBorrowIndex: '1',
-            accountBorrowIndex: '1',
+            accountBorrowIndex: '0',
             cProtections: [],
         },
     ],
