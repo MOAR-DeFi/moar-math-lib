@@ -17,6 +17,8 @@
     "require-jsdoc": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
     "no-use-before-define": ["error", { "functions": false, "classes": true }],
-    "no-bitwise": ["error", { "allow": ["~"] }]
+    "no-bitwise": ["error", { "allow": ["~"] }],
+    "no-plusplus": [2, { "allowForLoopAfterthoughts": true }],
+    "no-param-reassign": [2, { "props": false }]
   }
 }

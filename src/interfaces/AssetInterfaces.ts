@@ -32,7 +32,7 @@ export interface InterestModel {
 
 export interface BorrowRatePerBlockArgs {
     utilization: string | UtilizationArgs;
-    interestModel: InterestModel
+    interestModel: InterestModel;
 }
 
 export interface SupplyRatePerBlockArgs extends BorrowRatePerBlockArgs {
@@ -51,11 +51,11 @@ export interface NetApyArgs {
     deposits: {
         supplyApy: string | SupplyApyArgs;
         value: string | DepositValueArgs;
-    }[],
-    borrows:{
+    }[];
+    borrows: {
         borrowApy: string | BorrowApyArgs;
         value: string | BorrowValueArgs;
-    }[]
+    }[];
 }
 
 export interface MarketSizeArgs {

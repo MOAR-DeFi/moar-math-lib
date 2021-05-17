@@ -1,134 +1,185 @@
-import { evaluate, compare } from 'mathjs';
-import { DepositArgs, BorrowArgs, DepositValueArgs, BorrowValueArgs, UtilizationArgs, SupplyRatePerBlockArgs, BorrowRatePerBlockArgs, BorrowApyArgs, SupplyApyArgs, NetApyArgs, MarketSizeArgs, MarketSizeValueArgs, MarketTotalBorrowedArgs, MarketTotalBorrowedValueArgs } from '../interfaces/AssetInterfaces';
+import { mathjs, BigNumber, bignumber } from '../mathjs';
+import {
+    DepositArgs,
+    BorrowArgs,
+    DepositValueArgs,
+    BorrowValueArgs,
+    UtilizationArgs,
+    SupplyRatePerBlockArgs,
+    BorrowRatePerBlockArgs,
+    BorrowApyArgs,
+    SupplyApyArgs,
+    NetApyArgs,
+    MarketSizeArgs,
+    MarketSizeValueArgs,
+    MarketTotalBorrowedArgs,
+    MarketTotalBorrowedValueArgs,
+} from '../interfaces/AssetInterfaces';
 
 export function depositAmount(depositArgs: DepositArgs): string {
-    return evaluate(`${depositArgs.cTokenBalance} * ${depositArgs.marketExchangeRate}`);
+    const result = bignumber(depositArgs.cTokenBalance).mul(depositArgs.marketExchangeRate);
+    return mathjs.format(result, { notation: 'fixed' });
 }
 
 export function depositValue(depositArgs: DepositValueArgs): string {
-    return evaluate(`${depositAmount(depositArgs)} * ${depositArgs.price}`);
+    const result = bignumber(depositAmount(depositArgs)).mul(depositArgs.price);
+    return mathjs.format(result, { notation: 'fixed' });
 }
 
 export function borrowAmount(borrowArgs: BorrowArgs): string {
-    return evaluate(`${borrowArgs.storedBorrowBalance} * ${borrowArgs.marketBorrowIndex} / ${borrowArgs.accountBorrowIndex}`);
+    let result: BigNumber;
+    if (mathjs.compare(borrowArgs.accountBorrowIndex, 0) === 1) {
+        result = bignumber(borrowArgs.storedBorrowBalance)
+            .mul(borrowArgs.marketBorrowIndex)
+            .div(borrowArgs.accountBorrowIndex);
+    } else {
+        result = bignumber('0');
+    }
+    return mathjs.format(result, { notation: 'fixed' });
 }
 
 export function borrowValue(borrowArgs: BorrowValueArgs): string {
-    if (compare(borrowArgs.storedBorrowBalance, 0) === 1 && compare(borrowArgs.accountBorrowIndex, 0) === 1) {
-        return evaluate(`${borrowAmount(borrowArgs)} * ${borrowArgs.price}`);
-    }
-    return '0';
+    const result = bignumber(borrowAmount(borrowArgs)).mul(borrowArgs.price);
+    return mathjs.format(result, { notation: 'fixed' });
 }
 
 export function totalDepositsValue(totalDepositsArgs: DepositValueArgs[]): string {
-    let result = '0';
-    for(let i=0; i< totalDepositsArgs.length; i++) {
-        result = evaluate(`${depositValue(totalDepositsArgs[i])} + ${result}`);
+    let result = bignumber('0');
+    for (let i = 0; i < totalDepositsArgs.length; i++) {
+        result = result.add(depositValue(totalDepositsArgs[i]));
     }
-    return result
+    return mathjs.format(result, { notation: 'fixed' });
 }
 
 export function totalBorrowsValue(totalBorrowsArgs: BorrowValueArgs[]): string {
-    let result = '0';
-    for(let i=0; i< totalBorrowsArgs.length; i++) {
-        result = evaluate(`(${borrowValue(totalBorrowsArgs[i])}) + ${result}`);
+    let result = bignumber('0');
+    for (let i = 0; i < totalBorrowsArgs.length; i++) {
+        result = result.add(borrowValue(totalBorrowsArgs[i]));
     }
-    return result
+    return mathjs.format(result, { notation: 'fixed' });
 }
 
 export function utilization(utilArgs: UtilizationArgs): string {
-    return evaluate(`${utilArgs.totalBorrows} / (${utilArgs.cash} + ${utilArgs.totalBorrows} - ${utilArgs.reserves})`);
+    const result = bignumber(utilArgs.totalBorrows).div(
+        bignumber(utilArgs.cash).add(utilArgs.totalBorrows).sub(utilArgs.reserves)
+    );
+    return mathjs.format(result, { notation: 'fixed' });
 }
 
-export function borrowRatePerBlock(interestRateArgs: BorrowRatePerBlockArgs): string{
-    if(typeof interestRateArgs.utilization == 'object'){
-        interestRateArgs.utilization = utilization(interestRateArgs.utilization)
+export function borrowRatePerBlock(interestRateArgs: BorrowRatePerBlockArgs): string {
+    let result: BigNumber;
+    if (typeof interestRateArgs.utilization === 'object') {
+        interestRateArgs.utilization = utilization(interestRateArgs.utilization).toString();
     }
-    if(compare(interestRateArgs.utilization, interestRateArgs.interestModel.kink) <= 0){
-        return evaluate(`(${interestRateArgs.utilization} * ${interestRateArgs.interestModel.multiplierPerBlock} ) + ${interestRateArgs.interestModel.baseRatePerBlock}`)
+    if (mathjs.compare(interestRateArgs.utilization, interestRateArgs.interestModel.kink) <= 0) {
+        result = bignumber(interestRateArgs.utilization)
+            .mul(interestRateArgs.interestModel.multiplierPerBlock)
+            .plus(interestRateArgs.interestModel.baseRatePerBlock);
+    } else {
+        result = bignumber(interestRateArgs.utilization)
+            .sub(interestRateArgs.interestModel.kink)
+            .mul(interestRateArgs.interestModel.jumpMultiplierPerBlock)
+            .add(
+                bignumber(interestRateArgs.interestModel.kink)
+                    .mul(interestRateArgs.interestModel.multiplierPerBlock)
+                    .add(interestRateArgs.interestModel.baseRatePerBlock)
+            );
     }
-    else{
-        return evaluate(`(${interestRateArgs.utilization} - ${interestRateArgs.interestModel.kink} ) * ${interestRateArgs.interestModel.jumpMultiplierPerBlock}
-            + ((${interestRateArgs.interestModel.kink} * ${interestRateArgs.interestModel.multiplierPerBlock}) + ${interestRateArgs.interestModel.baseRatePerBlock})`)
-    }
+
+    return mathjs.format(result, { notation: 'fixed' });
 }
 
-export function supplyRatePerBlock(supplyRateArgs: SupplyRatePerBlockArgs): string{
-    if(typeof supplyRateArgs.utilization == 'object'){
-        supplyRateArgs.utilization = utilization(supplyRateArgs.utilization)
+export function supplyRatePerBlock(supplyRateArgs: SupplyRatePerBlockArgs): string {
+    if (typeof supplyRateArgs.utilization === 'object') {
+        supplyRateArgs.utilization = utilization(supplyRateArgs.utilization).toString();
     }
-    return evaluate(`${supplyRateArgs.utilization } * ( ${borrowRatePerBlock(supplyRateArgs)} * (1 - ${supplyRateArgs.reserveFactor}))`)
+    const result = bignumber('1')
+        .sub(supplyRateArgs.reserveFactor)
+        .mul(borrowRatePerBlock(supplyRateArgs))
+        .mul(supplyRateArgs.utilization);
+
+    return mathjs.format(result, { notation: 'fixed' });
 }
 
-export function borrowApy(borrowApyArgs: BorrowApyArgs): string{
-    if(typeof borrowApyArgs.borrowRatePerYear == 'object'){
-        borrowApyArgs.borrowRatePerYear = borrowRatePerBlock(borrowApyArgs.borrowRatePerYear)
+export function borrowApy(borrowApyArgs: BorrowApyArgs): string {
+    if (typeof borrowApyArgs.borrowRatePerYear === 'object') {
+        borrowApyArgs.borrowRatePerYear = borrowRatePerBlock(borrowApyArgs.borrowRatePerYear).toString();
     }
-    return evaluate(`((${borrowApyArgs.borrowRatePerYear} * 5760 + 1) ^ 365) - 1`)
+    const result = bignumber(borrowApyArgs.borrowRatePerYear).mul('5760').add('1').pow('365').sub('1');
+    return mathjs.format(result, { notation: 'fixed' });
 }
 
-export function supplyApy(supplyApyArgs: SupplyApyArgs): string{
-    if(typeof supplyApyArgs.supplyRatePerYear == 'object'){
-        supplyApyArgs.supplyRatePerYear = supplyRatePerBlock(supplyApyArgs.supplyRatePerYear)
+export function supplyApy(supplyApyArgs: SupplyApyArgs): string {
+    if (typeof supplyApyArgs.supplyRatePerYear === 'object') {
+        supplyApyArgs.supplyRatePerYear = supplyRatePerBlock(supplyApyArgs.supplyRatePerYear).toString();
     }
-    return evaluate(`((${supplyApyArgs.supplyRatePerYear} * 5760 + 1) ^ 365) - 1`)
+    const result = bignumber(supplyApyArgs.supplyRatePerYear).mul('5760').add('1').pow('365').sub('1');
+    return mathjs.format(result, { notation: 'fixed' });
 }
 
-export function netApy(netApyArgs: NetApyArgs): string{
-    let borrows = '0'
-    let deposits = '0'
-    let totalDepositsValue = '0'
-    for(let i=0; i< netApyArgs.borrows.length; i++) {
-        if(typeof netApyArgs.borrows[i].borrowApy == 'object'){
-            netApyArgs.borrows[i].borrowApy = borrowApy(netApyArgs.borrows[i].borrowApy as BorrowApyArgs)
+export function netApy(netApyArgs: NetApyArgs): string {
+    let borrows = bignumber('0');
+    let deposits = bignumber('0');
+    let allDepositsValue = bignumber('0');
+    for (let i = 0; i < netApyArgs.borrows.length; i++) {
+        if (typeof netApyArgs.borrows[i].borrowApy === 'object') {
+            netApyArgs.borrows[i].borrowApy = borrowApy(netApyArgs.borrows[i].borrowApy as BorrowApyArgs).toString();
         }
-        if(typeof netApyArgs.borrows[i].value == 'object'){
-            netApyArgs.borrows[i].value = borrowValue(netApyArgs.borrows[i].value as BorrowValueArgs)
+        if (typeof netApyArgs.borrows[i].value === 'object') {
+            netApyArgs.borrows[i].value = borrowValue(netApyArgs.borrows[i].value as BorrowValueArgs).toString();
         }
-        borrows = evaluate(`${netApyArgs.borrows[i].borrowApy} * ${netApyArgs.borrows[i].value} + ${borrows}`)
+        borrows = bignumber(netApyArgs.borrows[i].borrowApy as string)
+            .mul(netApyArgs.borrows[i].value as string)
+            .add(borrows);
     }
-    for(let i=0; i< netApyArgs.deposits.length; i++) {
-        if(typeof netApyArgs.deposits[i].supplyApy == 'object'){
-            netApyArgs.deposits[i].supplyApy = supplyApy(netApyArgs.deposits[i].supplyApy as SupplyApyArgs)
+    for (let i = 0; i < netApyArgs.deposits.length; i++) {
+        if (typeof netApyArgs.deposits[i].supplyApy === 'object') {
+            netApyArgs.deposits[i].supplyApy = supplyApy(netApyArgs.deposits[i].supplyApy as SupplyApyArgs).toString();
         }
-        if(typeof netApyArgs.deposits[i].value == 'object'){
-            netApyArgs.deposits[i].value = depositValue(netApyArgs.deposits[i].value as DepositValueArgs)
+        if (typeof netApyArgs.deposits[i].value === 'object') {
+            netApyArgs.deposits[i].value = depositValue(netApyArgs.deposits[i].value as DepositValueArgs).toString();
         }
-        deposits = evaluate(`${netApyArgs.deposits[i].supplyApy} * ${netApyArgs.deposits[i].value} + ${deposits}`)
-        totalDepositsValue = evaluate(`${netApyArgs.deposits[i].value} + ${totalDepositsValue}`)
+        deposits = bignumber(netApyArgs.deposits[i].supplyApy as string)
+            .mul(netApyArgs.deposits[i].value as string)
+            .add(deposits);
+
+        allDepositsValue = allDepositsValue.add(netApyArgs.deposits[i].value as string);
     }
-    return evaluate(`(${deposits} - ${borrows}) / ${totalDepositsValue}`)
+    const result = deposits.sub(borrows).div(allDepositsValue);
+    return mathjs.format(result, { notation: 'fixed' });
 }
 
-export function marketSize(marketSizeArgs: MarketSizeArgs): string{
-    return evaluate(`${marketSizeArgs.exchangeRate} * ${marketSizeArgs.totalSupply}`)
+export function marketSize(marketSizeArgs: MarketSizeArgs): string {
+    const result = bignumber(marketSizeArgs.exchangeRate).mul(marketSizeArgs.totalSupply);
+    return mathjs.format(result, { notation: 'fixed' });
 }
 
-export function marketSizeValue(marketSizeArgs: MarketSizeValueArgs): string{
-    return evaluate(`${marketSize(marketSizeArgs)} * ${marketSizeArgs.price}`)
+export function marketSizeValue(marketSizeArgs: MarketSizeValueArgs): BigNumber {
+    return bignumber(marketSize(marketSizeArgs)).mul(marketSizeArgs.price);
 }
 
-export function allMarketsSizeValue(marketSizeArgs: MarketSizeValueArgs[]): string{
-    let result = '0';
-    for(let i=0; i< marketSizeArgs.length; i++) {
-        result = evaluate(`${marketSizeValue(marketSizeArgs[i])} + ${result}`);
+export function allMarketsSizeValue(marketSizeArgs: MarketSizeValueArgs[]): string {
+    let result = bignumber('0');
+    for (let i = 0; i < marketSizeArgs.length; i++) {
+        result = result.add(marketSizeValue(marketSizeArgs[i]));
     }
-    return result
+    return mathjs.format(result, { notation: 'fixed' });
 }
 
-export function marketTotalBorrowed(marketTotalBorrowedArgs: MarketTotalBorrowedArgs): string{
-    return marketTotalBorrowedArgs.totalBorrows
+export function marketTotalBorrowed(marketTotalBorrowedArgs: MarketTotalBorrowedArgs): string {
+    const result = bignumber(marketTotalBorrowedArgs.totalBorrows);
+    return mathjs.format(result, { notation: 'fixed' });
 }
 
-export function marketTotalBorrowedValue(marketTotalBorrowedArgs: MarketTotalBorrowedValueArgs): string{
-    return evaluate(`${marketTotalBorrowed(marketTotalBorrowedArgs)} * ${marketTotalBorrowedArgs.price}`)
+export function marketTotalBorrowedValue(marketTotalBorrowedArgs: MarketTotalBorrowedValueArgs): string {
+    const result = bignumber(marketTotalBorrowed(marketTotalBorrowedArgs)).mul(marketTotalBorrowedArgs.price);
+    return mathjs.format(result, { notation: 'fixed' });
 }
 
-export function allMarketsBorrowedValue(marketTotalBorrowedArgs: MarketTotalBorrowedValueArgs[]): string{
-    let result = '0';
-    for(let i=0; i< marketTotalBorrowedArgs.length; i++) {
-        result = evaluate(`${marketTotalBorrowedValue(marketTotalBorrowedArgs[i])} + ${result}`);
+export function allMarketsBorrowedValue(marketTotalBorrowedArgs: MarketTotalBorrowedValueArgs[]): string {
+    let result = bignumber('0');
+    for (let i = 0; i < marketTotalBorrowedArgs.length; i++) {
+        result = result.add(marketTotalBorrowedValue(marketTotalBorrowedArgs[i]));
     }
-    return result
+    return mathjs.format(result, { notation: 'fixed' });
 }
-

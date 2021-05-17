@@ -68,7 +68,7 @@ export const calculateLiquidityBasicAccountWithCOPs: LiquidityArgs = {
             cProtections: [
                 {
                     amount: '100',
-                    expirationTimestamp: '2620927416',
+                    expirationTimestamp: (Math.floor(Date.now() / 1000) + 1000000).toString(),
                     maturityWindow: '10800',
                     lockedValue: '1500',
                     strike: '1800',
@@ -138,7 +138,7 @@ export const calculateLiquidityBasicAccountWithCOPsWithBorrow: LiquidityArgs = {
             cProtections: [
                 {
                     amount: '100',
-                    expirationTimestamp: '2620927416',
+                    expirationTimestamp: (Math.floor(Date.now() / 1000) + 1000000).toString(),
                     maturityWindow: '10800',
                     lockedValue: '1500',
                     strike: '1800',
@@ -173,7 +173,7 @@ export const calculateLiquidityBasicAccountWithCOPNotLocked: LiquidityArgs = {
             cProtections: [
                 {
                     amount: '100',
-                    expirationTimestamp: '2620927416',
+                    expirationTimestamp: (Math.floor(Date.now() / 1000) + 1000000).toString(),
                     maturityWindow: '10800',
                     lockedValue: '0',
                     strike: '1800',
@@ -208,7 +208,7 @@ export const calculateLiquidityBasicAccountWithCOPMTM: LiquidityArgs = {
             cProtections: [
                 {
                     amount: '100',
-                    expirationTimestamp: '2620927416',
+                    expirationTimestamp: (Math.floor(Date.now() / 1000) + 1000000).toString(),
                     maturityWindow: '10800',
                     lockedValue: '1500',
                     strike: '1800',
@@ -243,7 +243,7 @@ export const calculateLiquidityBasicAccountMultipleCOPsMultipleBorrows: Liquidit
             cProtections: [
                 {
                     amount: '100',
-                    expirationTimestamp: '2620927416',
+                    expirationTimestamp: (Math.floor(Date.now() / 1000) + 1000000).toString(),
                     maturityWindow: '10800',
                     lockedValue: '1500',
                     strike: '1800',
@@ -273,7 +273,7 @@ export const calculateLiquidityBasicAccountMultipleCOPsMultipleBorrows: Liquidit
             cProtections: [
                 {
                     amount: '60',
-                    expirationTimestamp: '2620927416',
+                    expirationTimestamp: (Math.floor(Date.now() / 1000) + 1000000).toString(),
                     maturityWindow: '10800',
                     lockedValue: '1800',
                     strike: '30',
