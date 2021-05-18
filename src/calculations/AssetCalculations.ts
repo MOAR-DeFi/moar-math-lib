@@ -154,8 +154,9 @@ export function marketSize(marketSizeArgs: MarketSizeArgs): string {
     return mathjs.format(result, { notation: 'fixed' });
 }
 
-export function marketSizeValue(marketSizeArgs: MarketSizeValueArgs): BigNumber {
-    return bignumber(marketSize(marketSizeArgs)).mul(marketSizeArgs.price);
+export function marketSizeValue(marketSizeArgs: MarketSizeValueArgs): string {
+    const result = bignumber(marketSize(marketSizeArgs)).mul(marketSizeArgs.price);
+    return mathjs.format(result, { notation: 'fixed' });
 }
 
 export function allMarketsSizeValue(marketSizeArgs: MarketSizeValueArgs[]): string {
