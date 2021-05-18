@@ -7,6 +7,9 @@ import {
     borrowApy,
     netApy,
     capacityUsed,
+    valueLockedByCopsAndBorrows,
+    valueAvaliableToWithdraw,
+    amountAvaliableToWithdraw,
 } from '../index';
 import {
     calculateLiquidityBasicAccount,
@@ -170,5 +173,20 @@ describe('calculate assets', () => {
     it('calculates basic capacityUsed', () => {
         const result = capacityUsed(calculateLiquidityBasicAccountMultipleCOPsMultipleBorrows);
         expect(result).toEqual('0.01068811074918566775244299674267100977198697068403908794788273616');
+    });
+
+    it('calculates basic valueLockedByCopsAndBorrows', () => {
+        const result = valueLockedByCopsAndBorrows(calculateLiquidityBasicAccountMultipleCOPsMultipleBorrows, 0);
+        expect(result).toEqual('1500');
+    });
+
+    it('calculates basic valueAvaliableToWithdraw', () => {
+        const result = valueAvaliableToWithdraw(calculateLiquidityBasicAccountMultipleCOPsMultipleBorrows, 0);
+        expect(result).toEqual('4500');
+    });
+
+    it('calculates basic amountAvaliableToWithdraw', () => {
+        const result = amountAvaliableToWithdraw(calculateLiquidityBasicAccountMultipleCOPsMultipleBorrows, 0);
+        expect(result).toEqual('3');
     });
 });

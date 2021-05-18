@@ -1,3 +1,5 @@
+import { LiquidityArgs } from './LiquidityInterfaces';
+
 export interface DepositArgs {
     cTokenBalance: string;
     marketExchangeRate: string;
@@ -73,4 +75,14 @@ export interface MarketTotalBorrowedArgs {
 
 export interface MarketTotalBorrowedValueArgs extends MarketTotalBorrowedArgs {
     price: string;
+}
+
+export interface LoanToValueArgs {
+    totalBorrows: string | BorrowValueArgs[];
+    liquidity: string | LiquidityArgs;
+}
+
+export interface ValueLockedByCopsAndBorrows {
+    depositValue: string | DepositValueArgs;
+    liquidity: string | LiquidityArgs;
 }

@@ -14,7 +14,10 @@ import {
     MarketSizeValueArgs,
     MarketTotalBorrowedArgs,
     MarketTotalBorrowedValueArgs,
+    LoanToValueArgs,
 } from '../interfaces/AssetInterfaces';
+import { liquidity } from './LiquidityCalculation';
+import { LiquidityArgs } from '../interfaces/LiquidityInterfaces';
 
 export function depositAmount(depositArgs: DepositArgs): string {
     const result = bignumber(depositArgs.cTokenBalance).mul(depositArgs.marketExchangeRate);
@@ -182,5 +185,64 @@ export function allMarketsBorrowedValue(marketTotalBorrowedArgs: MarketTotalBorr
     for (let i = 0; i < marketTotalBorrowedArgs.length; i++) {
         result = result.add(marketTotalBorrowedValue(marketTotalBorrowedArgs[i]));
     }
+    return mathjs.format(result, { notation: 'fixed' });
+}
+
+export function loanToValue(loanToValueArgs: LoanToValueArgs): string {
+    if (typeof loanToValueArgs.totalBorrows === 'object') {
+        loanToValueArgs.totalBorrows = totalBorrowsValue(loanToValueArgs.totalBorrows).toString();
+    }
+    if (typeof loanToValueArgs.liquidity === 'object') {
+        loanToValueArgs.liquidity = liquidity(loanToValueArgs.liquidity).toString();
+    }
+    const result = bignumber(loanToValueArgs.totalBorrows).div(loanToValueArgs.liquidity);
+    return mathjs.format(result, { notation: 'fixed' });
+}
+
+export function amountAvaliableToWithdraw(avaliableToWithdrawArgs: LiquidityArgs, assetIndex: number): string {
+    const result = bignumber(valueAvaliableToWithdraw(avaliableToWithdrawArgs, assetIndex)).div(
+        avaliableToWithdrawArgs.assets[assetIndex].underlyingPrice
+    );
+    return mathjs.format(result, { notation: 'fixed' });
+}
+
+export function valueAvaliableToWithdraw(avaliableToWithdrawArgs: LiquidityArgs, assetIndex: number): string {
+    const assetValue = depositValue({
+        cTokenBalance: avaliableToWithdrawArgs.assets[assetIndex].cTokenBalance,
+        marketExchangeRate: avaliableToWithdrawArgs.assets[assetIndex].exchangeRate,
+        price: avaliableToWithdrawArgs.assets[assetIndex].underlyingPrice,
+    });
+    const result = bignumber(assetValue).sub(valueLockedByCopsAndBorrows(avaliableToWithdrawArgs, assetIndex));
+    return mathjs.format(result, { notation: 'fixed' });
+}
+
+export function valueLockedByCopsAndBorrows(valueLockedArgs: LiquidityArgs, assetIndex: number): string {
+    const availableLiquidityBalance = liquidity(valueLockedArgs);
+    const assetClear = { ...valueLockedArgs.assets[assetIndex] };
+    const assetValue = depositValue({
+        cTokenBalance: assetClear.cTokenBalance,
+        marketExchangeRate: assetClear.exchangeRate,
+        price: assetClear.underlyingPrice,
+    });
+    assetClear.storedBorrowBalance = '0';
+    const assetLiquidityClear = liquidity({ assets: [assetClear] });
+
+    let minimalShareLock = bignumber(availableLiquidityBalance).sub(assetLiquidityClear).mul('-1');
+    if (minimalShareLock.comparedTo('0') === -1) {
+        minimalShareLock = bignumber('0');
+    }
+    if (minimalShareLock.comparedTo(assetValue) === 1) {
+        minimalShareLock = bignumber(assetValue);
+    }
+    let lockedByCops = bignumber('0');
+    for (let i = 0; i < assetClear.cProtections.length; i++) {
+        lockedByCops = lockedByCops.add(assetClear.cProtections[i].lockedValue);
+    }
+
+    let result = lockedByCops;
+    if (result.comparedTo(minimalShareLock) === -1) {
+        result = minimalShareLock;
+    }
+
     return mathjs.format(result, { notation: 'fixed' });
 }
