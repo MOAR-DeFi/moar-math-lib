@@ -15,8 +15,10 @@ import {
     MarketTotalBorrowedArgs,
     MarketTotalBorrowedValueArgs,
     LoanToValueArgs,
+    HypoteticalMaxOptimizableValueArgs,
+    MaxOptimizableValueArgs,
 } from '../interfaces/AssetInterfaces';
-import { liquidity } from './LiquidityCalculation';
+import { liquidity } from './LiquidityCalculations';
 import { LiquidityArgs } from '../interfaces/LiquidityInterfaces';
 
 export function depositAmount(depositArgs: DepositArgs): string {
@@ -244,5 +246,22 @@ export function valueLockedByCopsAndBorrows(valueLockedArgs: LiquidityArgs, asse
         result = minimalShareLock;
     }
 
+    return mathjs.format(result, { notation: 'fixed' });
+}
+
+export function hypoteticalMaxOptimizableValue(hMaxOptValArgs: HypoteticalMaxOptimizableValueArgs): string {
+    if (typeof hMaxOptValArgs.depositValue === 'object') {
+        hMaxOptValArgs.depositValue = depositValue(hMaxOptValArgs.depositValue).toString();
+    }
+    const result = bignumber(hMaxOptValArgs.depositValue).mul(hMaxOptValArgs.mpc);
+    return mathjs.format(result, { notation: 'fixed' });
+}
+
+export function maxOptimizableValue(maxOptValArgs: MaxOptimizableValueArgs): string {
+    let copsTotalValueLocked = bignumber('0');
+    for (let i = 0; i < maxOptValArgs.cops.length; i++) {
+        copsTotalValueLocked = copsTotalValueLocked.add(maxOptValArgs.cops[i].lockedValue);
+    }
+    const result = bignumber(hypoteticalMaxOptimizableValue(maxOptValArgs)).sub(copsTotalValueLocked);
     return mathjs.format(result, { notation: 'fixed' });
 }

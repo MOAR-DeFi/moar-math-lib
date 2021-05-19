@@ -86,3 +86,14 @@ export interface ValueLockedByCopsAndBorrows {
     depositValue: string | DepositValueArgs;
     liquidity: string | LiquidityArgs;
 }
+
+export interface HypoteticalMaxOptimizableValueArgs {
+    depositValue: string | DepositValueArgs;
+    mpc: string;
+}
+
+export interface MaxOptimizableValueArgs extends HypoteticalMaxOptimizableValueArgs {
+    cops: {
+        lockedValue: string;
+    }[];
+}

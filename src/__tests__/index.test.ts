@@ -10,6 +10,9 @@ import {
     valueLockedByCopsAndBorrows,
     valueAvaliableToWithdraw,
     amountAvaliableToWithdraw,
+    percentOf,
+    min,
+    max,
 } from '../index';
 import {
     calculateLiquidityBasicAccount,
@@ -188,5 +191,20 @@ describe('calculate assets', () => {
     it('calculates basic amountAvaliableToWithdraw', () => {
         const result = amountAvaliableToWithdraw(calculateLiquidityBasicAccountMultipleCOPsMultipleBorrows, 0);
         expect(result).toEqual('3');
+    });
+
+    it('calculates basic percentOf', () => {
+        const result = percentOf('15', '60');
+        expect(result).toEqual('25');
+    });
+
+    it('calculates basic min', () => {
+        const result = min(['-14', '0', '45.5']);
+        expect(result).toEqual('-14');
+    });
+
+    it('calculates basic max', () => {
+        const result = max(['-14', '0', '45.5']);
+        expect(result).toEqual('45.5');
     });
 });
