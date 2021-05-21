@@ -199,6 +199,9 @@ export function loanToValue(loanToValueArgs: LoanToValueArgs): string {
     if (typeof loanToValueArgs.liquidity === 'object') {
         loanToValueArgs.liquidity = liquidity(loanToValueArgs.liquidity).toString();
     }
+    if (bignumber(loanToValueArgs.liquidity).comparedTo('0') === 0) {
+        return mathjs.format(bignumber('0'), { notation: 'fixed' });
+    }
     const result = bignumber(loanToValueArgs.totalBorrows).div(loanToValueArgs.liquidity);
     return mathjs.format(result, { notation: 'fixed' });
 }
