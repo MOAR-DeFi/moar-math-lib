@@ -65,9 +65,11 @@ export function totalBorrowsValue(totalBorrowsArgs: BorrowValueArgs[]): string {
 }
 
 export function utilization(utilArgs: UtilizationArgs): string {
-    const result = bignumber(utilArgs.totalBorrows).div(
-        bignumber(utilArgs.cash).add(utilArgs.totalBorrows).sub(utilArgs.reserves)
-    );
+    const toDiv = bignumber(utilArgs.cash).add(utilArgs.totalBorrows).sub(utilArgs.reserves);
+    if (toDiv.comparedTo('0') === 0) {
+        return mathjs.format(bignumber('0'), { notation: 'fixed' });
+    }
+    const result = bignumber(utilArgs.totalBorrows).div(toDiv);
     return mathjs.format(result, { notation: 'fixed' });
 }
 
