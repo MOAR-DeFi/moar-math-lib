@@ -152,6 +152,9 @@ export function netApy(netApyArgs: NetApyArgs): string {
 
         allDepositsValue = allDepositsValue.add(netApyArgs.deposits[i].value as string);
     }
+    if (allDepositsValue.comparedTo('0') === 0) {
+        return mathjs.format(bignumber('0'), { notation: 'fixed' });
+    }
     const result = deposits.sub(borrows).div(allDepositsValue);
     return mathjs.format(result, { notation: 'fixed' });
 }
