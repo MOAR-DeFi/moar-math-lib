@@ -12,7 +12,7 @@ export function copMaxLockableValue(args: CopMaxLockableValueArgs): string {
     if (typeof args.assetMaxOptimizableValue === 'object') {
         args.assetMaxOptimizableValue = maxOptimizableValue(args.assetMaxOptimizableValue).toString();
     }
-    const result = min([
+    return min([
         bignumber(
             copTotalValue({
                 strike: args.cop.strike,
@@ -23,6 +23,4 @@ export function copMaxLockableValue(args: CopMaxLockableValueArgs): string {
             .toString(),
         args.assetMaxOptimizableValue,
     ]);
-
-    return mathjs.format(result, { notation: 'fixed' });
 }
