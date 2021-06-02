@@ -8,6 +8,11 @@ export function copTotalValue(copTotalValueArgs: CopTotalValueArgs): string {
     return mathjs.format(result, { notation: 'fixed' });
 }
 
+export function copMaxLockableAmount(args: CopMaxLockableValueArgs): string {
+    const result = bignumber(copMaxLockableValue(args)).div(args.cop.strike);
+    return mathjs.format(result, { notation: 'fixed' });
+}
+
 export function copMaxLockableValue(args: CopMaxLockableValueArgs): string {
     if (typeof args.assetMaxOptimizableValue === 'object') {
         args.assetMaxOptimizableValue = maxOptimizableValue(args.assetMaxOptimizableValue).toString();
