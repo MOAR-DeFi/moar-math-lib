@@ -45,15 +45,15 @@ export function liquidity(liquidityArgs: LiquidityArgs): string {
                     sumCollateral = sumCollateral.add(markToMarket);
                 }
             });
-            sumBorrowsPlusEffects = sumBorrowsPlusEffects.add(
-                borrowValue({
-                    price: asset.underlyingPrice,
-                    storedBorrowBalance: asset.storedBorrowBalance,
-                    marketBorrowIndex: asset.marketBorrowIndex,
-                    accountBorrowIndex: asset.accountBorrowIndex,
-                })
-            );
         }
+        sumBorrowsPlusEffects = sumBorrowsPlusEffects.add(
+            borrowValue({
+                price: asset.underlyingPrice,
+                storedBorrowBalance: asset.storedBorrowBalance,
+                marketBorrowIndex: asset.marketBorrowIndex,
+                accountBorrowIndex: asset.accountBorrowIndex,
+            })
+        );
     });
     const result = sumCollateral.sub(sumBorrowsPlusEffects);
     return mathjs.format(result, { notation: 'fixed' });
