@@ -224,7 +224,8 @@ export function valueAvaliableToWithdraw(avaliableToWithdrawArgs: LiquidityArgs,
     });
     const result = bignumber(assetValue)
         .mul(avaliableToWithdrawArgs.assets[assetIndex].collateralFactor)
-        .sub(valueLockedByCopsAndBorrows(avaliableToWithdrawArgs, assetIndex));
+        .sub(valueLockedByCopsAndBorrows(avaliableToWithdrawArgs, assetIndex))
+        .div(avaliableToWithdrawArgs.assets[assetIndex].collateralFactor);
     return mathjs.format(result, { notation: 'fixed' });
 }
 

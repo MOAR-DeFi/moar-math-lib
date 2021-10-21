@@ -185,12 +185,12 @@ describe('calculate assets', () => {
 
     it('calculates basic valueAvaliableToWithdraw', () => {
         const result = valueAvaliableToWithdraw(calculateLiquidityBasicAccountMultipleCOPsMultipleBorrows, 0);
-        expect(result).toEqual('1500');
+        expect(result).toEqual('3000');
     });
 
     it('calculates basic amountAvaliableToWithdraw', () => {
         const result = amountAvaliableToWithdraw(calculateLiquidityBasicAccountMultipleCOPsMultipleBorrows, 0);
-        expect(result).toEqual('1');
+        expect(result).toEqual('2');
     });
 
     it('calculates basic percentOf', () => {
